@@ -39,6 +39,16 @@ function TodoList() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  //  리스트를 클릭시 done(완료여부)를 반전시킨다. 그러나, 화면상에 취소선을 넣는건 아니다.
+  //  다른 곳에서
+  const handleToggle = (id) => {
+    setTodos(
+      todos.map((todo) => {
+        return todo.id === id ? { ...todo, done: !todo.done } : todo;
+      })
+    );
+  };
+
   return (
     <div>
       <div>
@@ -48,9 +58,24 @@ function TodoList() {
       <Container>
         <ul>
           {todos.map((todo) => (
-            <li key={todo.id}>
+            <li
+              key={todo.id}
+              style={{
+                textDecoration: todo.done && "line-through",
+                userSelect: "none",
+              }}
+              onClick={() => handleToggle(todo.id)}
+            >
               {todo.text}{" "}
-              <button onClick={() => handleRemove(todo.id)}> 할일삭제 </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemove(todo.id);
+                }}
+              >
+                {" "}
+                할일삭제{" "}
+              </button>
             </li>
           ))}
         </ul>
